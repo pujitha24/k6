@@ -1,8 +1,6 @@
 module go.k6.io/k6/v2
 
-go 1.25.0
-
-toolchain go1.25.12
+go 1.26.0
 
 require (
 	buf.build/gen/go/prometheus/prometheus/protocolbuffers/go v1.36.11-20260707164124-2360da55afce.1
@@ -60,9 +58,9 @@ require (
 	golang.org/x/crypto v0.55.0
 	golang.org/x/crypto/x509roots/fallback v0.0.0-20260811175631-f44d03d253a1
 	golang.org/x/net v0.58.0
-	golang.org/x/sync v0.22.0
+	golang.org/x/sync v0.23.0
 	golang.org/x/term v0.45.0
-	golang.org/x/time v0.15.0
+	golang.org/x/time v0.16.0
 	google.golang.org/grpc v1.83.2
 	google.golang.org/protobuf v1.36.12
 	gopkg.in/guregu/null.v3 v3.3.0
