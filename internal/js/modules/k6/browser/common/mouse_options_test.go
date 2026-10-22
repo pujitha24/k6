@@ -68,3 +68,13 @@ func TestMouseDblClickOptionsToMouseClickOptions(t *testing.T) {
 	assert.Equal(t, int64(50), got.Delay)
 	assert.Equal(t, int64(2), got.ClickCount)
 }
+
+func TestElementHandleClickOptionsToMouseClickOptionsModifiers(t *testing.T) {
+	t.Parallel()
+
+	click := &ElementHandleClickOptions{Button: "left", ClickCount: 1, Modifiers: []string{"Shift"}}
+	assert.Equal(t, []string{"Shift"}, click.ToMouseClickOptions().Modifiers)
+
+	dbl := &ElementHandleDblclickOptions{Button: "left", Modifiers: []string{"Alt"}}
+	assert.Equal(t, []string{"Alt"}, dbl.ToMouseClickOptions().Modifiers)
+}

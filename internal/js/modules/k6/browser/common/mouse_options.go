@@ -4,6 +4,9 @@ type MouseClickOptions struct {
 	Button     string `json:"button"`
 	ClickCount int64  `json:"clickCount"`
 	Delay      int64  `json:"delay"`
+	// Modifiers are the keys (e.g. "Shift", "ControlOrMeta") held down
+	// for the duration of the click.
+	Modifiers []string `json:"modifiers"`
 }
 
 type MouseDblClickOptions struct {

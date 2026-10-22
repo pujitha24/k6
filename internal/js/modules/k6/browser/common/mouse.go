@@ -41,7 +41,25 @@ func (m *Mouse) Click(x float64, y float64, opts *MouseClickOptions) error {
 	return nil
 }
 
-func (m *Mouse) click(x float64, y float64, opts *MouseClickOptions) error {
+func (m *Mouse) click(x float64, y float64, opts *MouseClickOptions) (rerr error) {
+	// Hold the requested modifiers down for the duration of the click, and
+	// release only the ones that we pressed.
+	for _, key := range opts.Modifiers {
+		resolved := m.keyboard.platformSpecificResolution(key)
+		bit := m.keyboard.modifierBitFromKeyName(resolved)
+		if bit != 0 && m.keyboard.modifiers&bit != 0 {
+			continue // already held by the user
+		}
+		if err := m.keyboard.down(key); err != nil {
+			return fmt.Errorf("pressing modifier %q: %w", key, err)
+		}
+		defer func() {
+			if err := m.keyboard.up(key); err != nil && rerr == nil {
+				rerr = fmt.Errorf("releasing modifier %q: %w", key, err)
+			}
+		}()
+	}
+
 	mouseDownUpOpts := opts.ToMouseDownUpOptions()
 	if err := m.move(x, y, NewMouseMoveOptions()); err != nil {
 		return err

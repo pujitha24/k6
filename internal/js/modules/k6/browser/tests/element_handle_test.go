@@ -147,6 +147,37 @@ func TestElementHandleClick(t *testing.T) {
 	assert.Equal(t, "Clicked", res)
 }
 
+func TestElementHandleClickWithModifiers(t *testing.T) {
+	t.Parallel()
+
+	tb := newTestBrowser(t)
+	p := tb.NewPage(nil)
+
+	err := p.SetContent(`<button onclick="window.result = [event.shiftKey, event.altKey].join()">x</button>`, nil)
+	require.NoError(t, err)
+
+	button, err := p.Query("button")
+	require.NoError(t, err)
+
+	opts := common.NewElementHandleClickOptions(button.Timeout())
+	opts.NoWaitAfter = true
+	opts.Modifiers = []string{"Shift", "Alt"}
+	require.NoError(t, button.Click(opts))
+
+	res, err := p.Evaluate(`() => window.result`)
+	require.NoError(t, err)
+	assert.Equal(t, "true,true", res)
+
+	// The modifiers must be released after the click.
+	opts = common.NewElementHandleClickOptions(button.Timeout())
+	opts.NoWaitAfter = true
+	require.NoError(t, button.Click(opts))
+
+	res, err = p.Evaluate(`() => window.result`)
+	require.NoError(t, err)
+	assert.Equal(t, "false,false", res)
+}
+
 func TestElementHandleClickWithNodeRemoved(t *testing.T) {
 	t.Parallel()
 
